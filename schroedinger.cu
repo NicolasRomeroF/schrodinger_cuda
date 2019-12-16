@@ -41,12 +41,12 @@ __host__ int main(){
 	cudaMemcpy(h1,H1, x*y*sizeof(float), cudaMemcpyHostToDevice);
 	cudaMemcpy(h2,H2, x*y*sizeof(float), cudaMemcpyHostToDevice);
 
+	gridsize.x = x;
+	gridsize.y = y;
 	blocksize.x = 32;
 	blocksize.y = 32;
-	gridsize.x = 32;
-	gridsize.y = 32;
 
-	schroedinger<<<(x*y)/512,512>>>(h2,h1,h0,c,dt,dd);
+	schroedinger<<<gridsize,blocksize>>>(h2,h1,h0,c,dt,dd);
 
 	cudaMemcpy(H2, h2, x*y*sizeof(float), cudaMemcpyDeviceToHost);
 	printf("%f ",h2[2]);
